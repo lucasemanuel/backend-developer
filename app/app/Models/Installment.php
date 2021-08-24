@@ -9,4 +9,9 @@ class Installment extends Model
     protected $fillable = [
         'installment', 'amount', 'date'
     ];
+
+    public function setAmountAttribute($value)
+    {
+        $this->attributes['amount'] = number_format((float) $value, 2, '.', '');
+    }
 }
