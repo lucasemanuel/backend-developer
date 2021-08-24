@@ -22,7 +22,6 @@ class SaleFactory
         $customer = self::createCustomer($customerName, $customerCep);
         $sale->setRelation('customer', $customer);
 
-        // dd($sale->toArray());
         return $sale;
     }
 
