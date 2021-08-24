@@ -10,7 +10,7 @@ class CepService
     public static function fetchAddress(string $cep)
     {
         $client = new Client();
-        $response = $client->request('GET', "https://viacep.com.br/ws/59380-000/json/");
+        $response = $client->request('GET', "https://viacep.com.br/ws/$cep/json/");
         $address = self::formatterResponseViaCep(json_decode($response->getBody()));
         return $address;
     }
