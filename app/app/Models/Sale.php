@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
+    protected $casts = [
+        'date' => 'datetime:Y-m-d'
+    ];
+
     protected $fillable = [
         'id', 'date', 'amount', 'customer', 'installments', 'totalInstallments'
     ];
