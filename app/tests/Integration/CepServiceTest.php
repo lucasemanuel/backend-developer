@@ -11,7 +11,7 @@ class CepServiceTest extends TestCase
     public function should_return_address_by_cep()
     {
         $cep = '59380000';
-        $address = CepService::fetchCep($cep);
+        $address = CepService::fetchAddress($cep);
         $this->assertEquals([
             'state' => 'RN',
             'city' => 'Currais Novos',
