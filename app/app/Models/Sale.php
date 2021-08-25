@@ -27,22 +27,26 @@ class Sale extends Model
 
     public function setTotalInstallmentsAttribute($value)
     {
+        $this->setInstallments($value);
+        $this->attributes['totalInstallments'] = $value;
+    }
+
+    private function setInstallments($total)
+    {
         $installments = [];
-        $amount = number_format((floor(($this->amount / $value) * 100) / 100), 2, '.', '');
-        $amountFirtsInstallment = number_format(($this->amount - ($amount * $value)), 2, '.', '');
-        for ($i = 0; $i < $value; $i++) {
-            $amountInstallment = $amount;
-            if ($i == 0) {
-                $amountInstallment += $amountFirtsInstallment;
-            }
+        $dividedAmount = number_format((floor(($this->amount / $total) * 100) / 100), 2, '.', '');
+        $restAmount = number_format(($this->amount - ($dividedAmount * $total)), 2, '.', '');
+
+        for ($i = 0; $i < $total; $i++) {
+            $amountByInstallment = $dividedAmount;
+            if ($i == 0) $amountByInstallment += $restAmount;
             $installment = new Installment([
                 'installment' => $i + 1,
-                'amount' => $amountInstallment
+                'amount' => $amountByInstallment
             ]);
             array_push($installments, $installment);
         }
 
         $this->setRelation('installments', collect($installments));
-        $this->attributes['totalInstallments'] = $value;
     }
 }
