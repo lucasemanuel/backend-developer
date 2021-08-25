@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
@@ -33,20 +34,46 @@ class Sale extends Model
 
     private function setInstallments($total)
     {
-        $installments = [];
-        $dividedAmount = number_format((floor(($this->amount / $total) * 100) / 100), 2, '.', '');
-        $restAmount = number_format(($this->amount - ($dividedAmount * $total)), 2, '.', '');
+        $installments = $this->installmentSale($total);
+        $this->setRelation('installments', collect($installments));
+    }
 
-        for ($i = 0; $i < $total; $i++) {
+    private function installmentSale($total)
+    {
+        $installments = [];
+        list($dividedAmount, $restAmount) = $this->divideAmount($total);
+
+        for ($i = 1; $i <= $total; $i++) {
             $amountByInstallment = $dividedAmount;
-            if ($i == 0) $amountByInstallment += $restAmount;
+            if ($i == 1) $amountByInstallment += $restAmount;
+            $date = $this->getDateNextInstallment($this->date, $i);
             $installment = new Installment([
-                'installment' => $i + 1,
-                'amount' => $amountByInstallment
+                'installment' => $i,
+                'amount' => $amountByInstallment,
+                'date' => $date,
             ]);
+
             array_push($installments, $installment);
         }
 
-        $this->setRelation('installments', collect($installments));
+        return $installments;
+    }
+
+    private function divideAmount($number)
+    {
+        $dividedAmount = number_format((floor(($this->amount / $number) * 100) / 100), 2, '.', '');
+        $restAmount = number_format(($this->amount - ($dividedAmount * $number)), 2, '.', '');
+
+        return [$dividedAmount, $restAmount];
+    }
+
+    private function getDateNextInstallment($date, $number)
+    {
+        $date = Carbon::parse($date);
+        $date->addMonths($number);
+        while($date->isWeekend()) {
+            $date->addDay();
+        }
+        return $date;
     }
 }
