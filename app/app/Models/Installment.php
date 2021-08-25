@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Installment extends Model
 {
+    protected $casts = [
+        'date' => 'datetime:Y-m-d'
+    ];
+
     protected $fillable = [
         'installment', 'amount', 'date'
     ];
