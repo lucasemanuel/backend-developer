@@ -6,7 +6,9 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
-        "laravel/lumen-framework": "^8.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "laravel/lumen-framework": "^8.0",
+        "nesbot/carbon": "^2.52"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -22,6 +24,9 @@
         }
     },
     "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        },
         "classmap": [
             "tests/"
         ]
