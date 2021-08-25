@@ -2,6 +2,7 @@
 
 namespace Tests\Integration;
 
+use App\Models\Address;
 use App\Services\CepService;
 use Tests\TestCase;
 
@@ -12,12 +13,13 @@ class CepServiceTest extends TestCase
     {
         $cep = '59380000';
         $address = CepService::fetchAddress($cep);
+        $this->assertInstanceOf(Address::class, $address);
         $this->assertEquals([
             'state' => 'RN',
             'city' => 'Currais Novos',
             'neighborhood' => '',
             'street' => '',
             'postal_code' => '59380-000'
-        ], $address);
+        ], $address->toArray());
     }
 }

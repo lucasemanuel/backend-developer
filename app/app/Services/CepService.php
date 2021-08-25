@@ -2,27 +2,24 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use App\Models\Address;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 class CepService
 {
-    public static function fetchAddress(string $cep)
+    public static function fetchAddress(string $cep): Address
     {
         $client = new Client();
         $response = $client->request('GET', "https://viacep.com.br/ws/$cep/json/");
-        $address = self::formatterResponseViaCep(json_decode($response->getBody()));
-        return $address;
-    }
+        $data = json_decode($response->getBody());
 
-    private static function formatterResponseViaCep($response)
-    {
-        return [
-            'state' => $response->uf,
-            'city' => $response->localidade,
-            'neighborhood' => $response->bairro,
-            'street' => $response->logradouro,
-            'postal_code' => $response->cep,
-        ];
+        return new Address([
+            'state' => $data->uf,
+            'city' => $data->localidade,
+            'neighborhood' => $data->bairro,
+            'street' => $data->logradouro,
+            'postal_code' => $data->cep,
+        ]);
     }
 }
