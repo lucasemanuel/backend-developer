@@ -2,10 +2,8 @@
 
 namespace App\Factories;
 
-use App\Models\Address;
-use App\Models\Customer;
 use App\Models\Sale;
-use App\Services\CepService;
+use App\Factories\CustomerFactory;
 use App\Helpers\FileHelper;
 
 class SaleFactory
@@ -19,22 +17,10 @@ class SaleFactory
             'amount' => $amount,
             'totalInstallments' => $totalInstallments
         ]);
-        $customer = self::createCustomer($customerName, $customerCep);
+
+        $customer = CustomerFactory::create($customerName, $customerCep);
         $sale->setRelation('customer', $customer);
 
         return $sale;
-    }
-
-    private static function createCustomer($name, $cep): Customer
-    {
-        $addressData = CepService::fetchAddress($cep);
-        $address = new Address($addressData);
-
-        $customer = new Customer([
-            'name' => $name,
-        ]);
-
-        $customer->setRelation('address', $address);
-        return $customer;
     }
 }
