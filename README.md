@@ -1,5 +1,5 @@
 # Test Backend Developer Loopa Digital
-[Link para instruções](https://github.com/lucasemanuel/backend-developer/tree/main/app)
+[Link para instruções](READ.MD)
 
 ## O que será avaliado
  - Lógica de programação
